@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col s4 offset-s4 z-depth-3">
         <h4 class="center-align">Ingreso</h4>
-        <form action="control.do">
+        <form action="control.do" method="post">
             <div class="input-field col s12">
                 <input id="rut" name="rut" type="text" class="validate">
                 <label for="rut">RUT</label>
