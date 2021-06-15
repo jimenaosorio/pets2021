@@ -31,5 +31,9 @@ public interface ServicioBeanLocal {
     Usuario buscarUsuario(String rut);
 
     void guardar(Object object);
+
+    Categoria buscarCategoria(int id);
+
+    void sincronizar(Object obj);
     
 }

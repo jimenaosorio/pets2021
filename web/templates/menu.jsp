@@ -18,7 +18,7 @@
             <li><a href="salir.jsp">Cerrar Sesion</a></li>
           </c:if>
           <c:if test="${not empty sessionScope.cliente}">
-            <li><a href="misdatos.jsp">Mis Datos</a></li>
+            <li><a href="misdatos2.jsp">Mis Datos</a></li>
             <li><a href="#">Carrito de compras</a></li>
             <li><a href="#">Mis Compras</a></li>
             <li><a href="producto.jsp">Productos</a></li>

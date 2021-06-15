@@ -78,6 +78,17 @@ public class ServicioBean implements ServicioBeanLocal {
     public void guardar(Object object) {
         em.persist(object);
     }
+
+    @Override
+    public Categoria buscarCategoria(int id) {
+        return null;
+    }
+
+    @Override
+    public void sincronizar(Object obj) {
+        em.merge(obj);
+        em.flush();
+    }
     
     
     

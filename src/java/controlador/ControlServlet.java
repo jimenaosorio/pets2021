@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.Categoria;
 import modelo.Perfil;
 import modelo.Usuario;
 import servicio.ServicioBeanLocal;
@@ -47,7 +48,83 @@ public class ControlServlet extends HttpServlet {
                     break;
                 case "registrar": registrar(request,response);
                     break;
+                case "nuevaCategoria": nuevaCategoria(request,response);
+                    break;
+                case "editardatos": modificarUsuario(request,response);
+                    break;
             }
+    }
+    
+    protected void modificarUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String correo=request.getParameter("correo");
+        String clave1=request.getParameter("clave1");
+        String clave2=request.getParameter("clave2");
+        String errores="";
+        String mensajes="";
+        Usuario usuario=(Usuario) request.getSession().getAttribute("admin");
+        //Cambio de clave
+        if(!clave1.isEmpty()) //Si quiere cambiar la clave escribió algo en clave1
+        {
+            if(!clave2.equals(clave1)) //Claves distintas
+            {
+                errores+="Las claves ingresadas no coinciden, por favor inténtelo de nuevo.<BR/>";
+                
+            }
+            else{
+                usuario.setClave(Hash.md5(clave2));
+                mensajes+="Se ha actualizado la clave del usuario.<BR/>";
+            }
+        }
+        //Cambio de correo
+        if(!correo.isEmpty()) //quiere cambiar el correo
+        {
+            usuario.setEmailUser(correo);
+            mensajes+="Se ha actualizado el correo.<BR/>";
+        }
+        if(!mensajes.isEmpty())
+        {
+            //Actualizar en la base de datos
+            servicioBean.sincronizar(usuario);
+            
+            //Actualizar en la sesión
+            request.getSession().setAttribute("admin",usuario);
+            
+            //Enviar el mensaje
+            request.setAttribute("msg",mensajes);
+        }
+        else if(errores.isEmpty())
+        {
+            request.setAttribute("msg", "No se han actualizado los datos");
+        }
+        else //hay errores
+        {
+            request.setAttribute("msg",errores);
+        }
+        request.getRequestDispatcher("misdatos.jsp").forward(request,response);
+        
+        
+    }
+    
+    protected void nuevaCategoria(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String nombre=request.getParameter("nombre");
+        if(nombre.isEmpty())
+        {
+            request.setAttribute("msg","Debe escribir el nombre de la categoria");
+            
+        }
+        else
+        {
+            //Agregamos la categoría
+            Categoria nueva=new Categoria();
+            nueva.setNombreCategoria(nombre);
+            servicioBean.guardar(nueva);
+            request.setAttribute("msg","Se ha creado la categoria correctamente");
+            
+        }
+        request.getRequestDispatcher("categoria.jsp").forward(request,response);
+        
     }
     
     protected void registrar(HttpServletRequest request, HttpServletResponse response)
